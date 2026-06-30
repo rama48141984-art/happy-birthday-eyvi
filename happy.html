@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Eyvi! 🧸✨</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            /* Cozy sleeping anime girl background palette & artwork placeholder style */
+            background: linear-gradient(rgba(44, 41, 64, 0.6), rgba(249, 190, 199, 0.5)), 
+                        url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- Ambient Global Sparkles / Hearts Decor (All Pages) --- */
+        .ambient-decor-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-item {
+            position: absolute;
+            bottom: -100px;
+            animation: floatUp 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- Audio Floating Signer Banner --- */
+        .music-banner {
+            position: fixed;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #ff4d6d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        /* --- Main Content Cards --- */
+        .card {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(8px);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            z-index: 10;
+            border: 4px solid #ffb3c6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
+        }
+
+        .hidden { display: none !important; }
+
+        h1 { color: #ff4d6d; margin-bottom: 1.5rem; font-size: 2.2rem; text-shadow: 1px 1px 0px #fff; }
+        p { color: #4a4a4a; font-size: 1.15rem; line-height: 1.6; margin-bottom: 2rem; }
+
+        /* --- Buttons --- */
+        .btn-container { display: flex; justify-content: center; gap: 1.5rem; width: 100%; }
+        .btn {
+            padding: 0.9rem 2.2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
+        }
+        .btn-primary { background-color: #ff4d6d; color: white; }
+        .btn-primary:hover { background-color: #ff758f; transform: scale(1.05); }
+        .btn-secondary { background-color: #fff0f3; color: #ff758f; border: 2px solid #ffb3c6; }
+        .btn-secondary:hover { transform: scale(0.98); }
+
+        /* --- Page Animations --- */
+        .welcome-icon { font-size: 5rem; animation: bounce 2.5s ease-in-out infinite; }
+
+        /* --- Page 3: Teddy Bear Bite Logic --- */
+        .bear-fight-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            height: 120px;
+            width: 220px;
+        }
+        .bear-angy, .bear-victim { font-size: 4.5rem; position: absolute; }
+        .bear-victim { left: 15px; }
+        .bear-angy {
+            right: 15px;
+            animation: biteAttack 1.2s infinite ease-in-out;
+        }
+        @keyframes biteAttack {
+            0%, 100% { transform: translateX(0) scaleX(-1); }
+            50% { transform: translateX(-45px) scaleX(-1) rotate(-12deg); }
+        }
+
+        /* --- Page 4: Interactive Candle --- */
+        .cake-container { position: relative; width: 150px; height: 150px; margin-bottom: 2rem; cursor: pointer; }
+        .cake { font-size: 6rem; line-height: 1; }
+        .candle-flame {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            animation: flicker 0.4s infinite alternate;
+            transition: opacity 0.5s ease;
+        }
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+            100% { transform: translateX(-48%) scale(1.15); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-decor-layer" id="ambientDecor"></div>
+
+    <div class="music-banner hidden" id="musicBanner">
+        <span>🎵 Singing: "Happy Birthday Eyvi..." 🎤</span>
+    </div>
+
+    <div class="card" id="page1">
+        <span class="welcome-icon">🌸✨🎀✨🌸</span>
+        <h1>Welcome, Eyvi!</h1>
+        <p>Today is entirely yours. A day as beautiful, bright, and sweet as your soul. Come step inside, Eyvi, there's a little magical journey waiting just for you...</p>
+        <div class="btn-container">
+            <button class="btn btn-primary" onclick="startExperience()">Enter Eyvi's World ✨</button>
+        </div>
+    </div>
+
+    <div class="card hidden" id="page2">
+        <span class="welcome-icon" style="font-size: 5rem;">🧸🎁💝</span>
+        <h1>A Birthday Surprise!</h1>
+        <p>I built a little virtual gift corner just for you! <br><b>Eyvi, do you want to see your birthday present?</b></p>
+        <div class="btn-container">
+            <button class="btn btn-primary" onclick="triggerYesCelebration()">Yes, please! 😍</button>
+            <button class="btn btn-secondary" onclick="goToPage(3)">No 😢</button>
+        </div>
+    </div>
+
+    <div class="card hidden" id="page3">
+        <div class="bear-fight-box">
+            <div class="bear-victim">😭</div>
+            <div class="bear-angy">🐻💢</div>
+        </div>
+        <h1 style="color: #c9184a;">Why did you press NO, Eyvi?!</h1>
+        <p>Teddy is super mad that you refused to look at your present! Bad choices mean gentle teddy nips. Go back right now and click yes! 🧸💥</p>
+        <div class="btn-container">
+            <button class="btn btn-primary" onclick="goToPage(2)">⬅️ Go Back & Say Yes!</button>
+        </div>
+    </div>
+
+    <div class="card hidden" id="page4">
+        <h1 id="celebrationHeader">Make a Wish, Eyvi! 🎂</h1>
+        
+        <div class="cake-container" id="cakeWrapper" onclick="extinguishCandle()">
+            <div class="candle-flame" id="flame">🔥</div>
+            <div class="cake">🎂</div>
+        </div>
+        <p id="cakeInstruction" style="font-style: italic; color:#777; font-size:0.95rem;">Blow into your microphone or click/tap the cake to blow out your candle!</p>
+        
+        <div id="lovelyMessage" class="hidden">
+            <p style="font-weight: bold; color: #ff4d6d; font-size: 1.4rem; margin-bottom: 1rem;">✨ Happy Birthday, Eyvi! ✨</p>
+            <p style="color: #c9184a; font-weight: 500; font-size: 1.1rem;">
+                May your universe be filled with endless smiles, cozy blankets, and warm teddy bear hugs. You bring so much bright starlight into the lives of everyone around you. You are deeply cherished, sweet Eyvi. Enjoy your day! 💖🎉
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let musicStarted = false;
+
+        // Populate Ambient background floating objects (Hearts, Confetti, Sparks)
+        const decorContainer = document.getElementById('ambientDecor');
+        const decorItems = ['❤️', '💖', '✨', '🎈', '🎉', '💕'];
+
+        function buildAmbientDecor() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.classList.add('floating-item');
+                    item.innerText = decorItems[Math.floor(Math.random() * decorItems.length)];
+                    item.style.left = Math.random() * 100 + 'vw';
+                    item.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                    item.style.fontSize = (Math.random() * 1 + 1.2) + 'rem';
+                    decorContainer.appendChild(item);
+                    setTimeout(() => { item.remove(); }, 10000);
+                }, i * 350);
+            }
+        }
+        buildAmbientDecor();
+        setInterval(buildAmbientDecor, 9000);
+
+        // Core App Navigation
+        function startExperience() {
+            goToPage(2);
+            if(!musicStarted) {
+                startBirthdayLoop();
+                document.getElementById('musicBanner').classList.remove('hidden');
+                musicStarted = true;
+            }
+        }
+
+        function goToPage(num) {
+            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+            document.getElementById('page' + num).classList.remove('hidden');
+        }
+
+        function triggerYesCelebration() {
+            goToPage(4);
+            initMicBlowDetection();
+        }
+
+        // Web Audio Synthesizer: Constant "Happy Birthday Eyvi" music loop
+        function startBirthdayLoop() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioCtx();
+                
+                // Notes sequence: [frequency (Hz), duration (ms)]
+                // "Happy Birthday to you, Happy Birthday to you, Happy Birthday Dear Eyvi..."
+                const melody = [
+                    [261.6, 300], [261.6, 150], [293.7, 450], [261.6, 450], [349.2, 450], [329.6, 900], // Line 1
+                    [261.6, 300], [261.6, 150], [293.7, 450], [261.6, 450], [392.0, 450], [349.2, 900], // Line 2
+                    [261.6, 300], [261.6, 150], [523.3, 450], [440.0, 450], [349.2, 450], [329.6, 450], [293.7, 450], // Line 3 (Dear Eyvi)
+                    [466.2, 300], [466.2, 150], [440.0, 450], [349.2, 450], [392.0, 450], [349.2, 900]  // Line 4
+                ];
+
+                function playNote(freq, duration, startTime) {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    
+                    osc.type = 'triangle'; // Gives a cute, soft retro synth vibe
+                    osc.frequency.setValueAtTime(freq, startTime);
+                    
+                    gain.gain.setValueAtTime(0.08, startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + (duration / 1000) - 0.05);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(startTime);
+                    osc.stop(startTime + (duration / 1000));
+                }
+
+                function loopMelody() {
+                    let currentScheduleTime = audioCtx.currentTime;
+                    melody.forEach(note => {
+                        playNote(note[0], note[1], currentScheduleTime);
+                        currentScheduleTime += (note[1] / 1000) + 0.03;
+                    });
+                    // Re-loop back continuously right after entire melody run length (~12.5 seconds)
+                    setTimeout(loopMelody, 12500);
+                }
+                
+                loopMelody();
+            } catch(e) {
+                console.log("Audio contexts blocked or unsupported on device hardware.");
+            }
+        }
+
+        // Microphone Blowing Air Tracker
+        function initMicBlowDetection() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const analyser = ctx.createAnalyser();
+                    const microphone = ctx.createMediaStreamSource(stream);
+                    const proc = ctx.createScriptProcessor(2048, 1, 1);
+
+                    analyser.fftSize = 1024;
+                    microphone.connect(analyser);
+                    analyser.connect(proc);
+                    proc.connect(ctx.destination);
+
+                    proc.onaudioprocess = function() {
+                        const buffer = new Uint8Array(analyser.frequencyBinCount);
+                        analyser.getByteFrequencyData(buffer);
+                        let sum = 0;
+                        for (let i = 0; i < buffer.length; i++) sum += buffer[i];
+                        let volumeAverage = sum / buffer.length;
+
+                        if (volumeAverage > 45) { // Blowing air noise signature peak threshold
+                            extinguishCandle();
+                            stream.getTracks().forEach(track => track.stop()); // Close mic
+                            proc.onaudioprocess = null;
+                        }
+                    }
+                }).catch(() => console.log("Mic blocked. Using click backup."));
+            }
+        }
+
+        // Candle Blow Action Trigger
+        function extinguishCandle() {
+            const flame = document.getElementById('flame');
+            if(flame) {
+                flame.style.opacity = '0';
+                setTimeout(() => flame.remove(), 400);
+
+                // Stunning Canvas Confetti Blast
+                confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
+
+                document.getElementById('celebrationHeader').innerText = "Happy Birthday, Eyvi! 🥳💖";
+                document.getElementById('cakeInstruction').classList.add('hidden');
+                document.getElementById('lovelyMessage').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
